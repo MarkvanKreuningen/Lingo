@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Profile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Set the profile to CI, so that application-ci.properties is loaded
  * and an import script is run.
  **/
-@Profile("ci")
 @SpringBootTest
 @Import(CiTestConfiguration.class)
 class WordServiceIntegrationTest {

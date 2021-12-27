@@ -2,11 +2,9 @@ package nl.hu.cisq1.lingo.words.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Profile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Profile("ci")
 class WordTest {
 
     @Test

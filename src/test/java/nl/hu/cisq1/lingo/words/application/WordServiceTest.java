@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.context.annotation.Profile;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -25,7 +24,6 @@ import static org.mockito.Mockito.*;
  * - its methods are called by the test framework instead of a controller
  * - the WordService calls a test double instead of an actual repository
  */
-@Profile("ci")
 class WordServiceTest {
 
     @ParameterizedTest
