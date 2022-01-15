@@ -1,5 +1,5 @@
-spring:
-
+#spring:
+#
 #  datasource:
 #    url: jdbc:postgresql://database-1.clzqu7hrf207.us-east-1.rds.amazonaws.com:5432/taskdatabasestaging
 #    username: taskdatabaseuser
