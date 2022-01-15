@@ -4,9 +4,11 @@ import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,19 +73,25 @@ class FeedbackTest {
         );
     }
 
-//    @ParameterizedTest
-//    @MethodSource({})
-//    @DisplayName("")
-//    void
-
-    @Test
+    @ParameterizedTest
+    @MethodSource({"giveHints"})
     @DisplayName("Hint based on previous hint and marks")
-    void giveHint() {
+    void giveHints(String attempt, List<Character> hintGettingBack, List<Character> previousHint, String wordToGuess) {
         // When
-        Feedback feedback = new Feedback("breed", List.of(Mark.ABSENT, Mark.PRESENT, Mark.ABSENT, Mark.ABSENT, Mark.CORRECT));
-        List<Character> hint = feedback.giveHint(List.of('W', '.', '.', '.', '.'), "woord");
+        Feedback feedback = new Feedback(attempt, List.of(Mark.ABSENT));
+        List<Character> hint = feedback.giveHint(previousHint, wordToGuess);
 
         // Then
-        assertEquals(List.of('W', '.', '.', '.','D'), hint);
+        assertEquals(hintGettingBack, hint);
+    }
+
+    public static Stream<Arguments> giveHints() {
+        return Stream.of(
+                Arguments.of("BERGEN", List.of('B', '.', '.', '.', '.'), List.of('B', '.', '.', '.', '.'), "BAARD"),
+                Arguments.of("BONJE", List.of('B', '.', '.', '.', '.'), List.of('B', '.', '.', '.', '.'), "BAARD"),
+                Arguments.of("BARST", List.of('B', 'A', '.', '.', '.'), List.of('B', '.', '.', '.', '.'), "BAARD"),
+                Arguments.of("BEDDE", List.of('B', 'A', '.', '.', '.'), List.of('B', 'A', '.', '.', '.'), "BAARD"),
+                Arguments.of("BAARD", List.of('B', 'A', 'A', 'R', 'D'), List.of('B', '.', '.', '.', '.'), "BAARD")
+        );
     }
 }
