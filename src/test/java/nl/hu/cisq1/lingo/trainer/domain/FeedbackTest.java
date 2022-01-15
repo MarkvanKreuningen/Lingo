@@ -1,5 +1,6 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -46,5 +47,28 @@ class FeedbackTest {
 
         // Then
         assertFalse(feedback.isGuessInvalid());
+    }
+
+    @Test
+    @DisplayName("Feedback is invalid if it does not contain enough marks")
+    void feedbackIsNotValid() {
+        // Then
+        assertThrows(
+                InvalidFeedbackException.class,
+                () -> Feedback.invalid("woord")
+        );
+    }
+
+    @Test
+    @DisplayName("Use Named static constructor for feedback correct")
+    void staticNamedConstructorFeedback() {
+        // When
+        Feedback.correct("woord");
+
+        // Then
+        assertThrows(
+                InvalidFeedbackException.class,
+                () -> new Feedback("woord", List.of(Mark.CORRECT))
+        );
     }
 }
