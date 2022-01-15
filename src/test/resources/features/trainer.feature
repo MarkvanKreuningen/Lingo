@@ -16,3 +16,22 @@ Feature: new round
     | 6               | 7           |
     | 7               | 5           |
 
+# Failure path
+    Given I am playing a game
+    And the round was lost
+    Then I cannot start a new round
+
+
+  Scenario Outline: Guessing a word
+    Given I am playing a game
+    And the word to guess is "<word>"
+    When I am guessing "<guess>"
+    Then I should get feedback "<feedback>"
+
+    Examples:
+      | word            | guess       | feedback                                              |
+      | BAARD           | BERGEN      | INVALID, INVALID, INVALID, INVALID, INVALID, INVALID  |
+      | BAARD           | BONJE       | CORRECT, ABSENT, ABSENT, ABSENT, ABSENT               |
+      | BAARD           | BARST       | CORRECT, ABSENT, ABSENT, ABSENT, ABSENT               |
+      | BAARD           | BEDDE       | CORRECT, ABSENT, PRESENT, ABSENT, ABSENT              |
+      | BAARD           | BAARD       | CORRECT, CORRECT, CORRECT, CORRECT, CORRECT           |
