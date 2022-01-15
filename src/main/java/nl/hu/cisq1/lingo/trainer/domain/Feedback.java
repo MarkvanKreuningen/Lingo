@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +25,20 @@ public class Feedback {
         Arrays.fill(emptyMarks, Mark.CORRECT);
         List<Mark> marks = List.of(emptyMarks);
         return new Feedback(attempt, marks);
+    }
+
+    public List<Character> giveHint(List<Character> previousHint, String wordToGuess) {
+        List<Character> hint = new ArrayList<>(previousHint);
+        char[] word = wordToGuess.toUpperCase().toCharArray();
+        char[] attempt = this.attempt.toUpperCase().toCharArray();
+
+        for (int i = 1; i < hint.size(); i++) {
+            if (word[i] == attempt[i]) {
+                hint.set(i, word[i]);
+            }
+        }
+
+        return hint;
     }
 
     public static void invalid(String attempt) {

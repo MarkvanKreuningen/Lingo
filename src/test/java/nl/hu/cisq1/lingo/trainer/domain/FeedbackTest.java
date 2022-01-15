@@ -3,6 +3,8 @@ package nl.hu.cisq1.lingo.trainer.domain;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 
@@ -67,5 +69,21 @@ class FeedbackTest {
                 InvalidFeedbackException.class,
                 () -> Feedback.invalid("woord")
         );
+    }
+
+//    @ParameterizedTest
+//    @MethodSource({})
+//    @DisplayName("")
+//    void
+
+    @Test
+    @DisplayName("Hint based on previous hint and marks")
+    void giveHint() {
+        // When
+        Feedback feedback = new Feedback("breed", List.of(Mark.ABSENT, Mark.PRESENT, Mark.ABSENT, Mark.ABSENT, Mark.CORRECT));
+        List<Character> hint = feedback.giveHint(List.of('W', '.', '.', '.', '.'), "woord");
+
+        // Then
+        assertEquals(List.of('W', '.', '.', '.','D'), hint);
     }
 }
