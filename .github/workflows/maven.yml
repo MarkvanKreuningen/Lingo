@@ -8,10 +8,11 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+    types:
+      [opened, synchronize, reopened]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +22,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+
     - name: Cache Maven packages
       uses: actions/cache@v1
       with:
@@ -28,4 +30,4 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
-      run: mvn --batch-mode --update-snapshots -B verify -Dspring.profiles.active=ci
+      run: mvn -B verify -Dspring.profiles.active=ci
