@@ -1,3 +1,4 @@
+# TODO: schets maken van het domein ahv deze scenario's
 Feature: new round
   Scenario: Start new game
     When I start a new game
