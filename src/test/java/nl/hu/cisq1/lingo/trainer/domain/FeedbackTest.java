@@ -13,7 +13,7 @@ class FeedbackTest {
     @DisplayName("Word is guessed if all letters are correct")
     void wordIsGuessed() {
         // When
-        Feedback feedback = new Feedback("woord", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT));
+        Feedback feedback = Feedback.correct("woord");
 
         // Then
         assertTrue(feedback.isWordGuessed());
@@ -62,13 +62,10 @@ class FeedbackTest {
     @Test
     @DisplayName("Use Named static constructor for feedback correct")
     void staticNamedConstructorFeedback() {
-        // When
-        Feedback.correct("woord");
-
         // Then
         assertThrows(
                 InvalidFeedbackException.class,
-                () -> new Feedback("woord", List.of(Mark.CORRECT))
+                () -> Feedback.invalid("woord")
         );
     }
 }
