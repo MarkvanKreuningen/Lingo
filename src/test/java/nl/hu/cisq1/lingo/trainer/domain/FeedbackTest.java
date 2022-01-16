@@ -74,24 +74,26 @@ class FeedbackTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"giveHints"})
+    @MethodSource({"provideHintExamples"})
     @DisplayName("Hint based on previous hint and marks")
-    void giveHints(String attempt, List<Character> hintGettingBack, List<Character> previousHint, String wordToGuess) {
-        // When
+    void giveHints(String attempt, List<Character> previousHint, String wordToGuess, List<Character> hintGettingBack) {
+        // Given
         Feedback feedback = new Feedback(attempt, List.of(Mark.ABSENT));
+
+        // When
         List<Character> hint = feedback.giveHint(previousHint, wordToGuess);
 
         // Then
         assertEquals(hintGettingBack, hint);
     }
 
-    public static Stream<Arguments> giveHints() {
+    public static Stream<Arguments> provideHintExamples() {
         return Stream.of(
-                Arguments.of("BERGEN", List.of('B', '.', '.', '.', '.'), List.of('B', '.', '.', '.', '.'), "BAARD"),
-                Arguments.of("BONJE", List.of('B', '.', '.', '.', '.'), List.of('B', '.', '.', '.', '.'), "BAARD"),
-                Arguments.of("BARST", List.of('B', 'A', '.', '.', '.'), List.of('B', '.', '.', '.', '.'), "BAARD"),
-                Arguments.of("BEDDE", List.of('B', 'A', '.', '.', '.'), List.of('B', 'A', '.', '.', '.'), "BAARD"),
-                Arguments.of("BAARD", List.of('B', 'A', 'A', 'R', 'D'), List.of('B', '.', '.', '.', '.'), "BAARD")
+                Arguments.of("BERGEN", List.of('B', '.', '.', '.', '.'), "BAARD", List.of('B', '.', '.', '.', '.')),
+                Arguments.of("BONRE", List.of('B', '.', '.', '.', '.'), "BAARD", List.of('B', '.', '.', 'R', '.')),
+                Arguments.of("BARST", List.of('B', '.', '.', 'R', '.'), "BAARD", List.of('B', 'A', '.', 'R', '.')),
+                Arguments.of("BEDDE", List.of('B', 'A', '.', 'R', '.'), "BAARD", List.of('B', 'A', '.', 'R', '.')),
+                Arguments.of("BAARD", List.of('B', 'A', '.', 'R', '.'), "BAARD", List.of('B', 'A', 'A', 'R', 'D'))
         );
     }
 }
