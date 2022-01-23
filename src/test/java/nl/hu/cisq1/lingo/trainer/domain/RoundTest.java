@@ -20,7 +20,7 @@ class RoundTest {
         round.guess("baard");
 
         // Then
-        assertEquals(1, round.getFeedbackHistory().size());
+        assertEquals(1, round.getFeedbacks().size());
     }
 
     @Test
@@ -59,7 +59,7 @@ class RoundTest {
         round.guess("breed");
 
         // Then
-        assertEquals(1, round.getFeedbackHistory().size());
+        assertEquals(1, round.getFeedbacks().size());
         assertEquals("B...D", round.giveHint());
     }
 }

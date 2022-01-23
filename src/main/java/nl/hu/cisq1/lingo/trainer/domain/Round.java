@@ -1,14 +1,31 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidGuessException;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@ToString
+@Getter
+@Setter
+@Entity
 public class Round {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String wordToGuess;
+
+    @ElementCollection
+    @CollectionTable
     private List<String> attempts;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Feedback> feedbacks;
 
 
@@ -18,8 +35,13 @@ public class Round {
         this.feedbacks = feedbacks;
     }
 
+    public Round() {
+
+    }
+
     public void guess(String attempt) {
-        if (this.getAttempts() >= 5) {
+        System.out.println(this.getAttempts().size());
+        if (this.getAttempts().size() >= 5) {
             throw new InvalidGuessException();
         }
 
@@ -30,6 +52,10 @@ public class Round {
         List<Feedback> feedbackList = new ArrayList<>(this.feedbacks);
         feedbackList.add(feedback);
         this.setFeedbacks(feedbackList);
+
+        List<String> attempsList = new ArrayList<>(this.attempts);
+        attempsList.add(attempt);
+        this.setAttempts(attempsList);
     }
 
     public Feedback createFeedback(String attempt) {
@@ -70,19 +96,7 @@ public class Round {
         return previousHint;
     }
 
-    public List<Feedback> getFeedbackHistory() {
-        return this.feedbacks;
-    }
-
-    public Integer getAttempts() {
-        return attempts.size();
-    }
-
     public Integer getCurrentWordLength() {
         return this.wordToGuess.length();
-    }
-
-    public void setFeedbacks(List<Feedback> feedbacks) {
-        this.feedbacks = feedbacks;
     }
 }
