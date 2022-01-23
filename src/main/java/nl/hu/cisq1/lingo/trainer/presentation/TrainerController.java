@@ -6,6 +6,7 @@ import nl.hu.cisq1.lingo.trainer.domain.Game;
 import nl.hu.cisq1.lingo.trainer.domain.Progress;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameOverException;
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidGuessException;
 import nl.hu.cisq1.lingo.trainer.presentation.dto.GuessDto;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,9 @@ public class TrainerController {
     }
 
     @PostMapping("/{id}")
-    public Progress guess(@PathVariable Long id, @RequestBody GuessDto dto) throws GameNotFoundException {
-        System.out.println(id);
+    public Progress guess(@PathVariable Long id, @RequestBody GuessDto guessDto) throws GameNotFoundException, GameOverException, InvalidFeedbackException, InvalidGuessException {
         Game game = trainerService.findById(id);
-        return trainerService.guess(game, dto);
+        return trainerService.guess(game, guessDto);
     }
 
     @ExceptionHandler({ GameNotFoundException.class })
@@ -44,7 +44,7 @@ public class TrainerController {
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler({InvalidGuessException.class, GameOverException.class, })
+    @ExceptionHandler({InvalidGuessException.class, InvalidFeedbackException.class, GameOverException.class, })
     public ResponseEntity<String> handleBadRequestException(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

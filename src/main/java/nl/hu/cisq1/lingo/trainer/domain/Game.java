@@ -4,8 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameOverException;
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidGuessException;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
@@ -17,10 +20,13 @@ public class Game {
     @GeneratedValue
     private Long id;
 
-    private Integer score;
-    private GameStatus status;
+    private Integer score = 0;
+
+    @Enumerated(EnumType.STRING)
+    private GameStatus status = GameStatus.WAITING_FOR_ROUND;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn
     private List<Round> rounds;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -42,21 +48,30 @@ public class Game {
         return new Game(0, GameStatus.WAITING_FOR_ROUND, null, progress);
     }
 
-    public void startNewRound(String wordToGuess) {
+    public Round startNewRound(String wordToGuess) {
         Round round = new Round(wordToGuess.toUpperCase(), null, null);
-        this.setRounds(List.of(round));
-        String hint = wordToGuess.toUpperCase().charAt(0) + "....";
-        this.progress.setHints(List.of(hint));
+        StringBuilder sb = new StringBuilder();
+        for (char c : wordToGuess.toCharArray()) {
+            sb.append(".");
+        }
+        sb.setCharAt(0, wordToGuess.toUpperCase().charAt(0));
+
+        this.progress.setHints(List.of(sb.toString()));
         this.progress.setRoundNumber(this.progress.getRoundNumber() + 1);
-        this.status = GameStatus.PLAYING;
+        return round;
     }
 
-    public void guess(String word) {
-        if (this.status == GameStatus.ELIMINATED) {
+    public boolean guess(String word) throws GameOverException, InvalidGuessException, InvalidFeedbackException {
+        if (this.isPlayerEliminated()) {
             throw new GameOverException();
         }
+        this.status = GameStatus.PLAYING;
         Round round = this.rounds.get(this.rounds.size() - 1);
-        round.guess(word.toUpperCase());
+        boolean isWordGuessed = round.guess(word.toUpperCase());
+        List<String> hints = new ArrayList<>(this.progress.getHints());
+        hints.add(round.giveHint());
+        this.progress.setHints(hints);
+        return isWordGuessed;
     }
 
     public Progress showProgress() {
@@ -84,4 +99,11 @@ public class Game {
         }
     }
 
+    public void wordIsGuessed() {
+        Round round = this.rounds.get(this.rounds.size() - 1);
+        Integer score = this.progress.getScore();
+        score += (5 - round.getAttempts().size()) * 5 + 5;
+        this.progress.setScore(score);
+        this.setScore(score);
+    }
 }

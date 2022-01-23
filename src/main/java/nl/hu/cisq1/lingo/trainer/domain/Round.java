@@ -3,6 +3,7 @@ package nl.hu.cisq1.lingo.trainer.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidGuessException;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class Round {
     private List<String> attempts;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn
     private List<Feedback> feedbacks;
 
 
@@ -39,23 +41,32 @@ public class Round {
 
     }
 
-    public void guess(String attempt) {
-        System.out.println(this.getAttempts().size());
+    public boolean guess(String attempt) throws InvalidGuessException, InvalidFeedbackException {
         if (this.getAttempts().size() >= 5) {
             throw new InvalidGuessException();
         }
-
-        Feedback feedback = this.createFeedback(attempt);
-        if (attempt.length() > this.getCurrentWordLength()) {
+        if (attempt.length() != this.getCurrentWordLength() ) {
+            this.saveAttempt(attempt);
             Feedback.invalid(attempt);
+            return false;
+        } else {
+            Feedback feedback = this.createFeedback(attempt);
+            this.saveAttempt(attempt);
+            this.saveFeedback(feedback);
+            return feedback.isWordGuessed();
         }
-        List<Feedback> feedbackList = new ArrayList<>(this.feedbacks);
-        feedbackList.add(feedback);
-        this.setFeedbacks(feedbackList);
+    }
 
+    public void saveAttempt(String attempt) {
         List<String> attempsList = new ArrayList<>(this.attempts);
         attempsList.add(attempt);
         this.setAttempts(attempsList);
+    }
+
+    public void saveFeedback(Feedback feedback) {
+        List<Feedback> feedbackList = new ArrayList<>(this.feedbacks);
+        feedbackList.add(feedback);
+        this.setFeedbacks(feedbackList);
     }
 
     public Feedback createFeedback(String attempt) {
@@ -63,6 +74,10 @@ public class Round {
         Arrays.fill(marks, Mark.ABSENT);
         char[] wordToGuessChar = this.wordToGuess.toCharArray();
         char[] attemptChar = attempt.toCharArray();
+
+        if (attempt.length() > wordToGuess.length()) {
+            Arrays.fill(marks, Mark.INVALID);
+        }
 
         for (int i = 0; i < wordToGuess.length(); i++) {
             if (attemptChar[i] == wordToGuessChar[i]) {

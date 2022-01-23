@@ -62,7 +62,7 @@ public class Feedback {
         return sb.toString();
     }
 
-    public static void invalid(String attempt) {
+    public static void invalid(String attempt) throws InvalidFeedbackException {
         throw new InvalidFeedbackException(attempt);
     }
 
