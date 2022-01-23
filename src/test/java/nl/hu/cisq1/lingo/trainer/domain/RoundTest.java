@@ -48,4 +48,18 @@ class RoundTest {
                 () -> round.guess("baaard")
         );
     }
+
+    @Test
+    @DisplayName("Guess is valid and there is asked for hint")
+    void giveHintAfterGuess() {
+        // Given
+        Round round = new Round("baard", List.of(), List.of());
+
+        // When
+        round.guess("breed");
+
+        // Then
+        assertEquals(1, round.getFeedbackHistory().size());
+        assertEquals("B...D", round.giveHint());
+    }
 }

@@ -8,6 +8,7 @@ import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 @ToString
@@ -27,8 +28,10 @@ public class Feedback {
         return new Feedback(attempt, marks);
     }
 
-    public List<Character> giveHint(List<Character> previousHint, String wordToGuess) {
-        List<Character> hint = new ArrayList<>(previousHint);
+    public String giveHint(String previousHint, String wordToGuess) {
+        List<Character> hint = new ArrayList<>(previousHint.chars()
+                .mapToObj(e->(char)e).collect(Collectors.toList()));
+
         char[] word = wordToGuess.toUpperCase().toCharArray();
         char[] attempt = this.attempt.toUpperCase().toCharArray();
 
@@ -37,8 +40,11 @@ public class Feedback {
                 hint.set(i, word[i]);
             }
         }
-
-        return hint;
+        StringBuilder sb = new StringBuilder();
+        for (Character ch: hint) {
+            sb.append(ch);
+        }
+        return sb.toString();
     }
 
     public static void invalid(String attempt) {

@@ -57,21 +57,28 @@ public class Round {
     }
 
     public String giveHint() {
-//        Feedback lastFeedback = this.feedbacks.get(this.feedbacks.size() - 1);
-//        Character[] characters = new Character[this.wordToGuess.length()];
-//        String returena = lastFeedback.giveHint(lastFeedbac, this.wordToGuess);
-        return "";
+        char[] word = this.wordToGuess.toUpperCase().toCharArray();
+        StringBuilder sb = new StringBuilder(this.getCurrentWordLength());
+        sb.append(word[0]);
+        sb.append(".".repeat(Math.max(0, this.getCurrentWordLength() - 1)));
+        String previousHint = sb.toString();
+
+        for (Feedback feedback : this.feedbacks) {
+            previousHint = feedback.giveHint(previousHint, this.wordToGuess);
+        }
+
+        return previousHint;
     }
 
     public List<Feedback> getFeedbackHistory() {
         return this.feedbacks;
     }
 
-    public int getAttempts() {
+    public Integer getAttempts() {
         return attempts.size();
     }
 
-    public int getCurrentWordLength() {
+    public Integer getCurrentWordLength() {
         return this.wordToGuess.length();
     }
 
