@@ -13,22 +13,6 @@ public class Progress {
         this.roundNumber = roundNumber;
     }
 
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    public List<String> getHints() {
-        return hints;
-    }
-
-    public void setHints(List<String> hints) {
-        this.hints = hints;
-    }
-
     public Integer getRoundNumber() {
         return roundNumber;
     }
