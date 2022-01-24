@@ -1,24 +1,39 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
 
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@EqualsAndHashCode
 @ToString
+@Getter
+@Setter
+@Entity
 public class Feedback {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String attempt;
+
+    @Enumerated
+    @ElementCollection(targetClass = Mark.class)
     private List<Mark> marks;
 
     public Feedback(String attempt, List<Mark> marks) {
         this.attempt = attempt;
         this.marks = marks;
+    }
+
+    public Feedback() {
+
     }
 
     public static Feedback correct(String attempt) {
@@ -47,7 +62,7 @@ public class Feedback {
         return sb.toString();
     }
 
-    public static void invalid(String attempt) {
+    public static void invalid(String attempt) throws InvalidFeedbackException {
         throw new InvalidFeedbackException(attempt);
     }
 

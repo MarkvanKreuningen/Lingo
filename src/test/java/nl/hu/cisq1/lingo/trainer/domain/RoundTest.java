@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RoundTest {
     @Test
     @DisplayName("Guess is valid")
-    void guessIsValid() {
+    void guessIsValid() throws InvalidGuessException, InvalidFeedbackException {
         // Given
         Round round = new Round("baard", List.of(), List.of());
 
@@ -20,7 +20,7 @@ class RoundTest {
         round.guess("baard");
 
         // Then
-        assertEquals(1, round.getFeedbackHistory().size());
+        assertEquals(1, round.getFeedbacks().size());
     }
 
     @Test
@@ -51,7 +51,7 @@ class RoundTest {
 
     @Test
     @DisplayName("Guess is valid and there is asked for hint")
-    void giveHintAfterGuess() {
+    void giveHintAfterGuess() throws InvalidGuessException, InvalidFeedbackException {
         // Given
         Round round = new Round("baard", List.of(), List.of());
 
@@ -59,7 +59,7 @@ class RoundTest {
         round.guess("breed");
 
         // Then
-        assertEquals(1, round.getFeedbackHistory().size());
+        assertEquals(1, round.getFeedbacks().size());
         assertEquals("B...D", round.giveHint());
     }
 }
