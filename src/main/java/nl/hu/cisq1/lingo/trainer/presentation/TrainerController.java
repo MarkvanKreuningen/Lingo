@@ -8,7 +8,6 @@ import nl.hu.cisq1.lingo.trainer.domain.exception.GameNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameOverException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidGuessException;
-import nl.hu.cisq1.lingo.trainer.presentation.dto.GuessDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +31,9 @@ public class TrainerController {
     }
 
     @PostMapping("/{id}")
-    public Progress guess(@PathVariable Long id, @RequestBody GuessDto guessDto) throws GameNotFoundException, GameOverException, InvalidFeedbackException, InvalidGuessException {
+    public Progress guess(@PathVariable Long id, @RequestParam String guess) throws GameNotFoundException, GameOverException, InvalidFeedbackException, InvalidGuessException {
         Game game = trainerService.findById(id);
-        return trainerService.guess(game, guessDto);
+        return trainerService.guess(game, guess);
     }
 
     @ExceptionHandler({ GameNotFoundException.class })

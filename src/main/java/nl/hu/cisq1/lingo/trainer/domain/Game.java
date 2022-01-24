@@ -44,7 +44,7 @@ public class Game {
     }
 
     public static Game startNewGame() {
-        Progress progress = new Progress(0, null, 0);
+        Progress progress = new Progress(0, null, 0, GameStatus.PLAYING);
         return new Game(0, GameStatus.WAITING_FOR_ROUND, null, progress);
     }
 

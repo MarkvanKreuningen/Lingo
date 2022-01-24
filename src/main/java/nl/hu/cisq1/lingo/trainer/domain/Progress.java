@@ -22,13 +22,21 @@ public class Progress {
     private List<String> hints;
     private Integer roundNumber;
 
-    public Progress(Integer score, List<String> hints, Integer roundNumber) {
+    @Enumerated(EnumType.STRING)
+    private GameStatus status = GameStatus.WAITING_FOR_ROUND;
+
+    public Progress(Integer score, List<String> hints, Integer roundNumber, GameStatus status) {
         this.score = score;
         this.hints = hints;
         this.roundNumber = roundNumber;
+        this.status = status;
     }
 
     public Progress() {
 
+    }
+
+    public String getCurrentHint() {
+        return hints.get(hints.size() - 1);
     }
 }

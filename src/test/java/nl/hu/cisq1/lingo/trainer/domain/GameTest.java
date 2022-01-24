@@ -12,7 +12,7 @@ class GameTest {
     @DisplayName("Provide next word length")
     void provideNextWordLength() {
         // Given
-        Progress progress = new Progress(5, null, 2);
+        Progress progress = new Progress(5, null, 2, GameStatus.PLAYING);
         Round round = new Round("BAARD", null, null);
         Game game = new Game(5, GameStatus.WAITING_FOR_ROUND, List.of(round), progress);
 

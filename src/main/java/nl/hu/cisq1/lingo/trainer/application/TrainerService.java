@@ -10,7 +10,6 @@ import nl.hu.cisq1.lingo.trainer.domain.exception.GameNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameOverException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidGuessException;
-import nl.hu.cisq1.lingo.trainer.presentation.dto.GuessDto;
 import nl.hu.cisq1.lingo.words.application.WordService;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +33,8 @@ public class TrainerService {
         return game.showProgress();
     }
 
-    public Progress guess(Game game, GuessDto guess) throws GameOverException, InvalidGuessException, InvalidFeedbackException, GameNotFoundException {
-        boolean isWordGuessed = game.guess(guess.getGuess());
+    public Progress guess(Game game, String guess) throws GameOverException, InvalidGuessException, InvalidFeedbackException, GameNotFoundException {
+        boolean isWordGuessed = game.guess(guess);
         if (isWordGuessed) {
             game.wordIsGuessed();
             return startNextRound(game);
