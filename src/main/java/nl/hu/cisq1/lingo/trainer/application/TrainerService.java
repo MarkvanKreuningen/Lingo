@@ -44,6 +44,7 @@ public class TrainerService {
     }
 
     public Progress startNextRound(Game game) {
+        System.out.println(game);
         Integer nextLength = game.provideNextWordLength();
         String wordToGuess = this.wordService.provideRandomWord(nextLength);
         Round round = game.startNewRound(wordToGuess);
